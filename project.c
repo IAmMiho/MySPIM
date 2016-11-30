@@ -223,12 +223,12 @@ int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsig
 		return 1;
 	}
 	
-	//case that MemWrite is 1. If it is, it sets memory of ALUresult to data2
+	//case that MemWrite is 1. Thus, it sets memory of ALUresult to data2
 	if (MemWrite == 1)
 	{
 		Mem[ALUresult >> 2] = data2;
 	}
-	//checks if MemRead is 1. If it is, it sets the memory data to memory of ALUresult shifted 2-bits
+	//case that MemRead is 1. Thus, it will set the memory data to memory of ALUresult shifted 2-bits
 	if (MemRead == 1)
 	{
 		*memdata = Mem[ALUresult >> 2];	
