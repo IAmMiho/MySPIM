@@ -84,18 +84,6 @@ void instruction_partition(unsigned instruction, unsigned *op, unsigned *r1,unsi
 /* 15 Points */
 int instruction_decode(unsigned op,struct_controls *controls)
 {
-    /*
-    char RegDst;
-	char Jump;
-	char Branch;
-	char MemRead;
-	char MemtoReg;
-	char ALUOp;
-	char MemWrite;
-	char ALUSrc;
-	char RegWrite;
-	*/
-
     // Switch for opcode
     switch(op){
         case 0:
@@ -105,10 +93,11 @@ int instruction_decode(unsigned op,struct_controls *controls)
             controls->Branch = '0';
             controls->MemRead = '0';
             controls->MemtoReg = '0';
-            controls->ALUOp = '7'; //ALU add
+            controls->ALUOp = '7';
             controls->MemWrite = '0';
             controls->ALUSrc = '0';
             controls->RegWrite = '1';
+            return 0;
             break;
         case 8:
             // Addi
@@ -116,11 +105,12 @@ int instruction_decode(unsigned op,struct_controls *controls)
             controls->Jump = '0';
             controls->Branch = '0';
             controls->MemRead = '0';
-            controls->MemtoReg = ;
+            controls->MemtoReg = '0';
             controls->ALUOp = '0';
-            controls->MemWrite = ;
+            controls->MemWrite = '0';
             controls->ALUSrc = '1';
-            controls->RegWrite = ;
+            controls->RegWrite = '1';
+            return 0;
             break;
         case 35:
             // lw
@@ -133,6 +123,7 @@ int instruction_decode(unsigned op,struct_controls *controls)
             controls->MemWrite = '0';
             controls->ALUSrc = '1';
             controls->RegWrite = '1';
+            return 0;
             break;
         case 43:
             // sw
@@ -145,6 +136,7 @@ int instruction_decode(unsigned op,struct_controls *controls)
             controls->MemWrite = '1';
             controls->ALUSrc = '1';
             controls->RegWrite = '0';
+            return 0;
             break;
         case 4:
             // Beq
@@ -157,6 +149,7 @@ int instruction_decode(unsigned op,struct_controls *controls)
             controls->MemWrite = '0';
             controls->ALUSrc = '0';
             controls->RegWrite = '0';
+            return 0;
             break;
         case 2:
             // jump
@@ -169,8 +162,10 @@ int instruction_decode(unsigned op,struct_controls *controls)
             controls->MemWrite = '0';
             controls->ALUSrc = '0';
             controls->RegWrite = '0';
+            return 0;
             break;
-
+        default:
+            return 1;
     }
 
     // Return 1 if invalid instruction, 0 otherwise
@@ -191,8 +186,15 @@ void read_register(unsigned r1,unsigned r2,unsigned *Reg,unsigned *data1,unsigne
 /* 10 Points */
 void sign_extend(unsigned offset,unsigned *extended_value)
 {
-    // copy left most bit to all bits on the left
-    // store in extended value
+    unsigned tmp = offset >> 15;
+
+    // if the most significant bit is 0, set ext_value to offset
+    if(tmp == 0)
+        *extended_value = offset;
+    // if the most significant bit is 1, put 16 bits of 1s in front of offset
+    else {
+        *extended_value = 0xFFFF0000 | offset;
+    }
 }
 
 /* ALU operations */
@@ -226,6 +228,20 @@ void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,
 /* 10 Points */
 void PC_update(unsigned jsec,unsigned extended_value,char Branch,char Jump,char Zero,unsigned *PC)
 {
+    // Increment word-aligned PC
+    *PC = *PC + 4;
+
+    // If instruction is branching, add offset to program counter
+    if(Branch == 1){
+        if(Zero == 0){
+            *PC = *PC + (extended_value << 2);
+        }
+    }
+    // If instruction is jumping
+    else if(Jump == 1){
+        *PC = (jsec << 2) + (*PC & 0xF8000000);
+    }
+
 
 }
 
