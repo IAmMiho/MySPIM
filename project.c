@@ -211,9 +211,30 @@ int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigne
 /* 10 Points */
 int rw_memory(unsigned ALUresult,unsigned data2,char MemWrite,char MemRead,unsigned *memdata,unsigned *Mem)
 {
-    // If MemWrite/MemRead is 2, do nothing
-    // If MemWrite is 1, store ALUResult in memdata
-    //
+    //case memwrite or memread are 1 and aluresult % 4 is in effect.
+	if ((MemWrite == 1 || MemRead == 1) && ALUresult % 4 != 0) //Halts
+	{
+		//this will halt
+		return 1;
+	}
+	//case that memwrite and memread are two, will halt
+	if(MemWrite==2 || MemRead==2){
+		//this will halt
+		return 1;
+	}
+	
+	//case that MemWrite is 1. If it is, it sets memory of ALUresult to data2
+	if (MemWrite == 1)
+	{
+		Mem[ALUresult >> 2] = data2;
+	}
+	//checks if MemRead is 1. If it is, it sets the memory data to memory of ALUresult shifted 2-bits
+	if (MemRead == 1)
+	{
+		*memdata = Mem[ALUresult >> 2];	
+	}
+    	
+	return 0;
 }
 
 
