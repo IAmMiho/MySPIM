@@ -201,10 +201,34 @@ void sign_extend(unsigned offset,unsigned *extended_value)
 /* 10 Points */
 int ALU_operations(unsigned data1,unsigned data2,unsigned extended_value,unsigned funct,char ALUOp,char ALUSrc,unsigned *ALUresult,char *Zero)
 {
-    // switch function based on ALUOp and funct
-        // use data1 and (data2 if ALUSrc is 0 or extend_value if ALUSrc is 1) to do operations
-        // using ALU()
-    // Return 1 if invalid operation, 0 otherwise
+	//r-type instruction
+    if(ALUSrc==0){
+  
+	switch (funct) {
+            case 0x21: // case for unassigned addition
+                ALUOp = 0;
+                break;
+            case 0x23: // case for unassigned subtraction
+                ALUOp = 1;
+                break;
+	    case 0x2a: // Set on <
+                ALUOp = 2;
+                break;
+	    case 0x2b: // Set on < unsigned
+                ALUOp = 3;
+                break;
+            case 0x24: // Bitwise &
+                ALUOp = 4;
+                break;
+            default:
+                return 1;
+        }
+	    
+	ALU(data1, data2, ALUOp, ALUresult, Zero); //return ALUOP operation with certain value
+     }
+     else if(ALUSrc==1){
+        ALU(data1, extended_value, ALUOp, ALUresult, Zero); //return extended value instead of data2     
+     }
 }
 
 /* Read / Write Memory */
