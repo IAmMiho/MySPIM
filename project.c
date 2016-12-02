@@ -274,9 +274,9 @@ void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,
         }
         else {
             if (RegDst == 1)
-                Reg [r3] = ALUresult; // ALUresult in case of rd
+                Reg [r3] = ALUresult; // ALUresult in case of RD
             else    
-                Reg [r2] = ALUresult; // ALUresult in case of rt
+                Reg [r2] = ALUresult; // ALUresult in case of RT
         }
     }
 }
