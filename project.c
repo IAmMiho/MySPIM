@@ -101,7 +101,7 @@ int instruction_decode(unsigned op,struct_controls *controls)
             break;
         case 8:
             // Addi
-            controls->RegDst = 0;
+            controls->RegDst = 1;
             controls->Jump = 0;
             controls->Branch = 0;
             controls->MemRead = 0;
