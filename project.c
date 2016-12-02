@@ -88,7 +88,7 @@ int instruction_decode(unsigned op,struct_controls *controls)
     switch(op){
         case 0:
             //R-type
-            controls->RegDst = 0;
+            controls->RegDst = 1;
             controls->Jump = 0;
             controls->Branch = 0;
             controls->MemRead = 0;
@@ -101,7 +101,7 @@ int instruction_decode(unsigned op,struct_controls *controls)
             break;
         case 8:
             // Addi
-            controls->RegDst = 1;
+            controls->RegDst = 0;
             controls->Jump = 0;
             controls->Branch = 0;
             controls->MemRead = 0;
@@ -114,7 +114,7 @@ int instruction_decode(unsigned op,struct_controls *controls)
             break;
         case 15:
             // lui
-            controls->RegDst = 1;
+            controls->RegDst = 0;
             controls->Jump = 0;
             controls->Branch = 0;
             controls->MemRead = 0;
@@ -293,7 +293,7 @@ void write_register(unsigned r2,unsigned r3,unsigned memdata,unsigned ALUresult,
                 Reg[r2] = memdata; //memdata in case of RT
     }
     else if (RegWrite == 1 && MemtoReg == 0) {
-        if (RegDst == 0)
+        if (RegDst == 1)
             Reg [r3] = ALUresult; // ALUresult in case of RD
         else
             Reg [r2] = ALUresult; // ALUresult in case of RT
